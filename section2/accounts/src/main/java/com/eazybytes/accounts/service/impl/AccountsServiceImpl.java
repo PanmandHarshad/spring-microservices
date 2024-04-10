@@ -1,10 +1,13 @@
 package com.eazybytes.accounts.service.impl;
 
 import com.eazybytes.accounts.constants.AccountsConstants;
+import com.eazybytes.accounts.dto.AccountsDto;
 import com.eazybytes.accounts.dto.CustomerDto;
 import com.eazybytes.accounts.entity.Accounts;
 import com.eazybytes.accounts.entity.Customer;
 import com.eazybytes.accounts.exception.CustomerAlreadyExistsException;
+import com.eazybytes.accounts.exception.ResourceNotFoundException;
+import com.eazybytes.accounts.mapper.AccountsMapper;
 import com.eazybytes.accounts.mapper.CustomerMapper;
 import com.eazybytes.accounts.repository.AccountsRepository;
 import com.eazybytes.accounts.repository.CustomerRepository;
@@ -24,14 +27,13 @@ public class AccountsServiceImpl implements IAccountService {
     private CustomerRepository customerRepository;
 
     /**
-     *
      * @param customerDto
      */
     @Override
     public void createAccount(CustomerDto customerDto) {
         Customer customer = CustomerMapper.mapToCustomer(customerDto, new Customer());
         Optional<Customer> optionalCustomer = customerRepository.findByMobileNumber(customerDto.getMobileNumber());
-        if (optionalCustomer.isPresent()){
+        if (optionalCustomer.isPresent()) {
             throw new CustomerAlreadyExistsException("Customer is already registered with given mobileNumber " + customerDto.getMobileNumber());
         }
         customer.setCreatedAt(LocalDateTime.now());
@@ -55,5 +57,22 @@ public class AccountsServiceImpl implements IAccountService {
         newAccount.setCreatedAt(LocalDateTime.now());
         newAccount.setCreatedBy("Anonymous");
         return newAccount;
+    }
+
+
+    @Override
+    public CustomerDto fetchAccount(String mobileNumber) {
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber)
+                );
+        Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString())
+                );
+
+        CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
+        customerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(accounts, new AccountsDto()));
+        return customerDto;
     }
 }
