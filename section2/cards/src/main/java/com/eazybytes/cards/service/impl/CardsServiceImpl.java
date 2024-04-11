@@ -25,9 +25,9 @@ public class CardsServiceImpl implements ICardsService {
      */
     @Override
     public void createCard(String mobileNumber) {
-        Optional<Cards> optionalCards = cardsRepository.findByMobileNumber(mobileNumber);
-        if (optionalCards.isPresent()) {
-            throw new CardAlreadyExistsException("Card already registered with given mobileNumber " + mobileNumber);
+        Optional<Cards> optionalCards= cardsRepository.findByMobileNumber(mobileNumber);
+        if(optionalCards.isPresent()){
+            throw new CardAlreadyExistsException("Card already registered with given mobileNumber "+mobileNumber);
         }
         cardsRepository.save(createNewCard(mobileNumber));
     }
@@ -48,6 +48,11 @@ public class CardsServiceImpl implements ICardsService {
         return newCard;
     }
 
+    /**
+     *
+     * @param mobileNumber - Input mobile Number
+     * @return Card Details based on a given mobileNumber
+     */
     @Override
     public CardsDto fetchCard(String mobileNumber) {
         Cards cards = cardsRepository.findByMobileNumber(mobileNumber).orElseThrow(
@@ -56,13 +61,32 @@ public class CardsServiceImpl implements ICardsService {
         return CardsMapper.mapToCardsDto(cards, new CardsDto());
     }
 
+    /**
+     *
+     * @param cardsDto - CardsDto Object
+     * @return boolean indicating if the update of card details is successful or not
+     */
     @Override
     public boolean updateCard(CardsDto cardsDto) {
-        return false;
+        Cards cards = cardsRepository.findByCardNumber(cardsDto.getCardNumber()).orElseThrow(
+                () -> new ResourceNotFoundException("Card", "CardNumber", cardsDto.getCardNumber()));
+        CardsMapper.mapToCards(cardsDto, cards);
+        cardsRepository.save(cards);
+        return  true;
     }
 
+    /**
+     * @param mobileNumber - Input MobileNumber
+     * @return boolean indicating if the delete of card details is successful or not
+     */
     @Override
     public boolean deleteCard(String mobileNumber) {
-        return false;
+        Cards cards = cardsRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Card", "mobileNumber", mobileNumber)
+        );
+        cardsRepository.deleteById(cards.getCardId());
+        return true;
     }
+
+
 }
