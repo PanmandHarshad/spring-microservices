@@ -20,8 +20,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 				description = "EazyBank Cards microservice REST API Documentation",
 				version = "v1",
 				contact = @Contact(
-						name = "Madan Reddy",
-						email = "tutor@eazybytes.com",
+						name = "Harshad Panmand",
+						email = "Harshad.Panmand@gmail.com",
 						url = "https://www.eazybytes.com"
 				),
 				license = @License(
