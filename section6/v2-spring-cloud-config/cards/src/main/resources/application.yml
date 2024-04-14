@@ -22,3 +22,10 @@ spring:
     # configserver name should as it is, irrespective of project name.
     # here we have project name also same as configserver
     import: "optional:configserver:http://localhost:8071/"
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
