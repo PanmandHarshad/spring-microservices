@@ -8,8 +8,8 @@ spring:
     config:
       server:
         #native:
-          #search-locations: "classpath:/config"
-          #search-locations: "file:///D:\\Harshad\\spring-microservices\\section6\\v2-spring-cloud-config\\external\\config"
+        #search-locations: "classpath:/config"
+        #search-locations: "file:///D:\\Harshad\\spring-microservices\\section6\\v2-spring-cloud-config\\external\\config"
         git:
           uri: "https://github.com/PanmandHarshad/spring-microservices-config.git"
           default-label: main
@@ -27,6 +27,15 @@ management:
     web:
       exposure:
         include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true
 
 encrypt:
   key: "45D81EC1EF61DF9AD8D3E5BB397F9"

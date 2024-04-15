@@ -21,6 +21,7 @@ spring:
   config:
     # configserver name should as it is, irrespective of project name.
     # here we have project name also same as configserver
+    # This establishes the link between config-server ms and accounts ms
     import: "optional:configserver:http://localhost:8071/"
   rabbitmq:
     host: "localhost"
