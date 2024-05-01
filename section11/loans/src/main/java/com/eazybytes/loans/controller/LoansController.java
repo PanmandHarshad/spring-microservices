@@ -26,7 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author Eazy Bytes
+ * @author Harshad Panmand
  */
 
 @Tag(
@@ -106,8 +106,9 @@ public class LoansController {
                                                      @RequestParam
                                                      @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
                                                      String mobileNumber) {
-        logger.debug("eazyBank-correlation-id found: {} ", correlationId);
+        logger.debug("fetchLoanDetails method start");
         LoansDto loansDto = iLoansService.fetchLoan(mobileNumber);
+        logger.debug("fetchLoanDetails method end");
         return ResponseEntity.status(HttpStatus.OK).body(loansDto);
     }
 
@@ -256,7 +257,6 @@ public class LoansController {
     @GetMapping("/contact-info")
     public ResponseEntity<LoansContactInfoDto> getContactInfo() {
         logger.debug("Invoked Loans contact-info API");
-//        throw new RuntimeException();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(loansContactInfoDto);
