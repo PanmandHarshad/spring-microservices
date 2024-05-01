@@ -31,8 +31,8 @@ management:
     env:
       enabled: true
   metrics:
-    logs:
-      application:${spring.application.name}
+    tags:
+      application: ${spring.application.name}
 
 info:
   app:
