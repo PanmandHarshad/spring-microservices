@@ -48,6 +48,9 @@ management:
   info:
     env:
       enabled: true
+  metrics:
+    logs:
+      application:${spring.application.name}
 
 endpoints:
   shutdown:
