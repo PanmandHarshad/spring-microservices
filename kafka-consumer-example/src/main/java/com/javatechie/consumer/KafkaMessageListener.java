@@ -15,8 +15,23 @@ public class KafkaMessageListener {
      *
      * @param message consumed message
      */
-    @KafkaListener(topics = "javatechie-demo", groupId = "jt-group-1")
-    public void consume(String message) {
-        logger.info("Consumer consume the message {}", message);
+    @KafkaListener(topics = "javatechie-demo-2", groupId = "jt-group-new")
+    public void consume1(String message) {
+        logger.info("Consumer1 consume the message {}", message);
+    }
+
+    @KafkaListener(topics = "javatechie-demo-2", groupId = "jt-group-new")
+    public void consume2(String message) {
+        logger.info("Consumer2 consume the message {}", message);
+    }
+
+    @KafkaListener(topics = "javatechie-demo-2", groupId = "jt-group-new")
+    public void consume3(String message) {
+        logger.info("Consumer3 consume the message {}", message);
+    }
+
+    @KafkaListener(topics = "javatechie-demo-2", groupId = "jt-group-new")
+    public void consume4(String message) {
+        logger.info("Consumer4 consume the message {}", message);
     }
 }
