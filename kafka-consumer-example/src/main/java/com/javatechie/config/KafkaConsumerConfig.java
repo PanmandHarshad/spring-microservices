@@ -21,12 +21,9 @@ public class KafkaConsumerConfig {
     @Bean
     public Map<String, Object> consumerConfig() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                "localhost:9092");
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-                JsonDeserializer.class);
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.javatechie.dto");
         return props;
     }
@@ -38,8 +35,7 @@ public class KafkaConsumerConfig {
 
     @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Object>> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, Object> factory =
-                new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
