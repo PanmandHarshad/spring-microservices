@@ -20,7 +20,7 @@ public class KafkaMessagePublisher {
 
         // Use a topic which is already created
         // Behind the scene this topic is created with 3 partitions
-        CompletableFuture<SendResult<String, Object>> future = template.send("javatechie-demo-3", message);
+        CompletableFuture<SendResult<String, Object>> future = template.send("javatechie-demo-2", message);
 
         future.whenComplete((result, ex) -> {
             if (ex == null) {

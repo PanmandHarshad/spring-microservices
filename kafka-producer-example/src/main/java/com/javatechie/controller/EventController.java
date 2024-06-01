@@ -19,7 +19,7 @@ public class EventController {
     @GetMapping("/publish/{message}")
     public ResponseEntity<?> publishMessage(@PathVariable String message) {
         try {
-            for (int i = 0; i < 10_000; i++) {
+            for (int i = 0; i < 1_00_000; i++) {
                 publisher.sendMessageToTopic(i + " : " + message);
             }
             return ResponseEntity.ok("Message published successfully ..");
