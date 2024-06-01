@@ -1,5 +1,6 @@
 package com.javatechie.service;
 
+import com.javatechie.dto.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -31,5 +32,23 @@ public class KafkaMessagePublisher {
                         message + "] due to : " + ex.getMessage());
             }
         });
+    }
+
+    public void sendEventsToTopic(Customer customer) {
+        try {
+            CompletableFuture<SendResult<String, Object>> future = template.send("javatechie-customer-1", customer);
+
+            future.whenComplete((result, ex) -> {
+                if (ex == null) {
+                    System.out.println("Sent customer = [" + customer.toString() +
+                            "] with offset=[" + result.getRecordMetadata().offset() + "]");
+                } else {
+                    System.out.println("Unable to send customer=[" +
+                            customer.toString() + "] due to : " + ex.getMessage());
+                }
+            });
+        } catch (Exception exception) {
+            System.out.println("EXCEPTION: " + exception.getMessage());
+        }
     }
 }
