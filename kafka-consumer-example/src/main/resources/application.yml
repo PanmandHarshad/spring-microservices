@@ -1,16 +1,16 @@
 # Instead of using configuration from yml file you can create a bean for this configuration.
-#spring:
-#  kafka:
-#    consumer:
-#      bootstrap-server: localhost:9092
-#      group-id: jt-group-1
-#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-#      properties:
-#        spring:
-#          json:
-#            trusted:
-#              packages: com.javatechie.dto
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: jt-group  # Default group ID for all Kafka consumers
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.javatechie.dto
 
 server:
   port: 9292
