@@ -1,7 +1,7 @@
 package com.javatechie;
 
 import com.javatechie.dto.Customer;
-import com.javatechie.service.KafkaMessagePublisher;
+import com.javatechie.service.KafkaEventMessagePublisher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,11 +30,12 @@ class KafkaProducerExampleApplicationTests {
     }
 
     @Autowired
-    private KafkaMessagePublisher publisher;
+    private KafkaEventMessagePublisher kafkaEventMessagePublisher;
 
     @Test
     public void testSendEventsToTopic() {
-        publisher.sendEventsToTopic(new Customer(263, "test user", "test@gmail.com", "13213413"));
+        Customer testUser = new Customer(263, "test user", "test@gmail.com", "13213413");
+        kafkaEventMessagePublisher.sendEventsToTopic(testUser);
         await().pollInterval(Duration.ofSeconds(3))
                 .atMost(10, TimeUnit.SECONDS).untilAsserted(() ->
                         {
