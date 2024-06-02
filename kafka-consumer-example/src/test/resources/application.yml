@@ -1,4 +1,3 @@
-# Instead of using configuration from yml file you can create a bean for this configuration.
 spring:
   kafka:
     producer:
@@ -11,17 +10,16 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       # Deserializer for the value of the messages consumed by Kafka consumer.
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      # Default group id for Kafka consumers. This is the group id used by the main application consumers.
-      group-id: jt-group
+      # Group id for Kafka consumers during testing.
+      # This ensures isolation of test consumer offsets from the main application consumers.
+      # Here 'jt-group-55' is used for producing and consuming Customer type data inside test and src
+      group-id: jt-group-55
       # Automatically reset the offset to the earliest offset if no offset is found for a consumer's group.
       auto-offset-reset: earliest
       properties:
         spring:
           json:
             trusted:
-              # Specifies the packages that the JsonDeserializer can trust. This ensures that only the specified packages are deserialized.
+              # Specifies the packages that the JsonDeserializer can trust.
+              # This ensures that only the specified packages are deserialized.
               packages: com.javatechie.dto
-
-
-server:
-  port: 9292

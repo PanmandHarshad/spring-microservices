@@ -11,7 +11,7 @@ import static com.javatechie.constants.KafkaConsumerConstants.TOPIC_NAME_TEXT_DA
 @Service
 public class KafkaMessageListenerPlainText {
 
-    Logger logger = LoggerFactory.getLogger(KafkaEventMessageListenerCustomer.class);
+    Logger logger = LoggerFactory.getLogger(KafkaMessageListenerPlainText.class);
 
     /**
      * Here need to consume the message of type String, as producer is producing the message of type String
