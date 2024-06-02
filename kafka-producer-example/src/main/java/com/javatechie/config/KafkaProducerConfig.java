@@ -43,15 +43,6 @@ import java.util.Map;
 @Configuration
 public class KafkaProducerConfig {
 
-    /**
-     * Creates a new Kafka topic named "javatechie-customer-1" with 3 partitions and a replication factor of 1.
-     *
-     * @return the NewTopic object representing the created topic.
-     */
-    @Bean
-    public NewTopic createTopic() {
-        return new NewTopic("javatechie-customer-1", 3, (short) 1);
-    }
 //
 //    /**
 //     * Configures the properties for the Kafka producer, including bootstrap servers and serializers.
