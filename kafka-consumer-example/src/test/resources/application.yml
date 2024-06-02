@@ -1,0 +1,25 @@
+spring:
+  kafka:
+    producer:
+      # Serializer for the key of the messages sent by Kafka producer.
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # Serializer for the value of the messages sent by Kafka producer.
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      # Deserializer for the key of the messages consumed by Kafka consumer.
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # Deserializer for the value of the messages consumed by Kafka consumer.
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      # Group id for Kafka consumers during testing.
+      # This ensures isolation of test consumer offsets from the main application consumers.
+      # Here 'jt-group-55' is used for producing and consuming Customer type data inside test and src
+      group-id: jt-group-55
+      # Automatically reset the offset to the earliest offset if no offset is found for a consumer's group.
+      auto-offset-reset: earliest
+      properties:
+        spring:
+          json:
+            trusted:
+              # Specifies the packages that the JsonDeserializer can trust.
+              # This ensures that only the specified packages are deserialized.
+              packages: com.javatechie.dto
