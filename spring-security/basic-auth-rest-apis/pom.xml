@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.demo.secure.apis</groupId>
-	<artifactId>Secure-REST-APIs</artifactId>
+	<artifactId>basic-auth-rest-apis</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Secure-REST-APIs</name>
 	<description>Demo project for Spring Boot</description>
