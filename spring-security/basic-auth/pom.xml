@@ -11,7 +11,7 @@
     <groupId>com.example</groupId>
     <artifactId>basic-auth</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>basic and jwt token auth rest apis</name>
+    <name>basic auth</name>
     <description>Demo project for Basic and JWT based authentication for REST APIs</description>
     <properties>
         <java.version>17</java.version>
