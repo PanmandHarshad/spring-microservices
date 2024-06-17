@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>basic-and-jwt-token-auth</artifactId>
+    <artifactId>basic-auth</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>basic and jwt token auth rest apis</name>
     <description>Demo project for Basic and JWT based authentication for REST APIs</description>
