@@ -1,18 +1,24 @@
 package com.example.basic.and.jwt.token.auth.config;
 
+import com.example.basic.and.jwt.token.auth.filter.JwtAuthFilter;
 import com.example.basic.and.jwt.token.auth.service.UserInfoUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -25,6 +31,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter;
+
     /**
      * Bean to load user-specific data.
      *
@@ -36,9 +45,14 @@ public class SecurityConfig {
     }
 
     /**
-     * Bean to configure security filter chain.
+     * Bean to configure the security filter chain.
+     * <p>
+     * This method configures web-based security for specific HTTP requests. The order of the
+     * requestMatchers is important because they are evaluated in sequence. Once a match is found,
+     * the remaining matchers are not evaluated. Therefore, specific paths should be placed before
+     * more general ones.
      *
-     * @param http the HttpSecurity object to configure web based security for specific http requests.
+     * @param http the HttpSecurity object to configure web-based security for specific HTTP requests.
      * @return the SecurityFilterChain object.
      * @throws Exception if an error occurs while building the security filter chain.
      */
@@ -48,9 +62,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/product/welcome").permitAll() // Allows unauthenticated access to "/product/welcome"
                         .requestMatchers("/product/new").permitAll() // Allows unauthenticated access to "/product/new"
+                        .requestMatchers("/product/authenticate").permitAll() // Allows unauthenticated access to "/product/authenticate"
                         .requestMatchers("/product/**").authenticated() // Requires authentication for all other "/product/**" endpoints
                 )
-                .formLogin(withDefaults()) // Enables default form login configuration
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build(); // Builds the SecurityFilterChain object
     }
 
@@ -89,5 +107,10 @@ public class SecurityConfig {
 
         // Returns the configured DaoAuthenticationProvider instance
         return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 }
