@@ -20,8 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 /**
  * Security configuration class for Spring Security.
  * Configures authentication providers, user details service, password encoder, and security filter chain.
@@ -36,8 +34,12 @@ public class SecurityConfig {
 
     /**
      * Bean to load user-specific data.
+     * <p>
+     * This method creates and returns an instance of {@link UserInfoUserDetailsService}
+     * which implements {@link UserDetailsService}. This service is used to load user-specific
+     * data during the authentication process.
      *
-     * @return an instance of UserInfoUserDetailsService which implements UserDetailsService.
+     * @return an instance of UserInfoUserDetailsService.
      */
     @Bean
     public UserDetailsService userDetailsService() {
@@ -48,9 +50,19 @@ public class SecurityConfig {
      * Bean to configure the security filter chain.
      * <p>
      * This method configures web-based security for specific HTTP requests. The order of the
-     * requestMatchers is important because they are evaluated in sequence. Once a match is found,
+     * request matchers is important because they are evaluated in sequence. Once a match is found,
      * the remaining matchers are not evaluated. Therefore, specific paths should be placed before
      * more general ones.
+     * </p>
+     * <p>
+     * The security filter chain is configured to:
+     * <ul>
+     *     <li>Disable CSRF protection.</li>
+     *     <li>Allow unauthenticated access to specific endpoints.</li>
+     *     <li>Require authentication for all other "/product/**" endpoints.</li>
+     *     <li>Set session management to stateless to support JWT-based authentication.</li>
+     *     <li>Add a custom JWT authentication filter before the {@link UsernamePasswordAuthenticationFilter}.</li>
+     * </p>
      *
      * @param http the HttpSecurity object to configure web-based security for specific HTTP requests.
      * @return the SecurityFilterChain object.
@@ -66,14 +78,18 @@ public class SecurityConfig {
                         .requestMatchers("/product/**").authenticated() // Requires authentication for all other "/product/**" endpoints
                 )
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Sets session management to stateless
+                .authenticationProvider(authenticationProvider()) // Configures the custom authentication provider
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // Adds the JWT authentication filter
                 .build(); // Builds the SecurityFilterChain object
     }
 
     /**
      * Bean to encode passwords using BCrypt hashing algorithm.
+     * <p>
+     * This method creates and returns an instance of {@link BCryptPasswordEncoder}, which is used to encode
+     * passwords before storing them and to verify encoded passwords during authentication.
+     * </p>
      *
      * @return an instance of BCryptPasswordEncoder.
      */
@@ -109,6 +125,17 @@ public class SecurityConfig {
         return daoAuthenticationProvider;
     }
 
+    /**
+     * Bean to configure the AuthenticationManager.
+     * <p>
+     * This method creates and returns an instance of {@link AuthenticationManager} using the provided
+     * {@link AuthenticationConfiguration}. The AuthenticationManager is used to authenticate users.
+     * </p>
+     *
+     * @param configuration the AuthenticationConfiguration object to configure the AuthenticationManager.
+     * @return an instance of AuthenticationManager.
+     * @throws Exception if an error occurs while creating the AuthenticationManager.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();

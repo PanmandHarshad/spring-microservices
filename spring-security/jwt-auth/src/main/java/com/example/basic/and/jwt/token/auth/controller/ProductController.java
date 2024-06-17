@@ -33,6 +33,9 @@ public class ProductController {
 
     /**
      * Endpoint to welcome users.
+     * <p>
+     * This endpoint is accessible without authentication and simply returns a welcome message.
+     * </p>
      *
      * @return a welcome message.
      */
@@ -43,7 +46,9 @@ public class ProductController {
 
     /**
      * Endpoint to retrieve all products.
-     * Only accessible by users with the ROLE_ADMIN authority.
+     * <p>
+     * This endpoint is secured and only accessible by users with the ROLE_ADMIN authority.
+     * </p>
      *
      * @return a list of all products.
      */
@@ -55,7 +60,9 @@ public class ProductController {
 
     /**
      * Endpoint to retrieve a product by its ID.
-     * Only accessible by users with the ROLE_USER authority.
+     * <p>
+     * This endpoint is secured and only accessible by users with the ROLE_USER authority.
+     * </p>
      *
      * @param id the ID of the product.
      * @return the product with the specified ID.
@@ -68,6 +75,10 @@ public class ProductController {
 
     /**
      * Endpoint to add a new user.
+     * <p>
+     * This endpoint allows adding a new user without requiring authentication. The user information
+     * is passed in the request body and saved using the {@link ProductService}.
+     * </p>
      *
      * @param userInfo the user information.
      * @return a message indicating the user was added.
@@ -77,14 +88,26 @@ public class ProductController {
         return productService.addUser(userInfo);
     }
 
+    /**
+     * Endpoint to authenticate a user and generate a JWT token.
+     * <p>
+     * This endpoint accepts an {@link AuthRequest} containing the username and password. It uses
+     * the {@link AuthenticationManager} to authenticate the user and, if successful, generates a JWT token
+     * using the {@link JwtService}.
+     * </p>
+     *
+     * @param authRequest the authentication request containing username and password.
+     * @return a JWT token if authentication is successful.
+     * @throws UsernameNotFoundException if the authentication request is invalid.
+     */
     @PostMapping("/authenticate")
     public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
             return jwtService.generateToken(authRequest.getUsername());
         } else {
             throw new UsernameNotFoundException("Invalid user request !");
         }
-
     }
 }
